@@ -22,16 +22,16 @@ final public class XcodeTypographyExporter: XcodeExporterBase {
             files.append(try makeFontExtension(textStyles: textStyles, swiftUIFontExtensionURL: url))
         }
 
-        // UIKit Labels
-        if output.generateLabels, let labelsDirectory = output.urls.labels.labelsDirectory  {
-            // LabelStyle.swift
-            files.append(try makeLabelStyle(labelsDirectory: labelsDirectory))
-            
-            // LabelStyle extensions
-            if let url = output.urls.labels.labelStyleExtensionsURL {
-                files.append(try makeLabelStyleExtensionFileContents(
+        // SwiftUI TextStyles
+        if output.generateTextStyles, let textStylesDirectory = output.urls.textStyles.textStylesDirectory  {
+            // TextStyle.swift
+            files.append(try makeTextStyle(textStylesDirectory: textStylesDirectory))
+
+            // TextStyle extensions
+            if let url = output.urls.textStyles.textStyleExtensionsURL {
+                files.append(try makeTextStyleExtensionFileContents(
                     textStyles: textStyles,
-                    labelStyleExtensionURL: url
+                    textStyleExtensionURL: url
                 ))
             }
         }
@@ -74,9 +74,19 @@ final public class XcodeTypographyExporter: XcodeExporterBase {
         return try makeFileContents(for: contents, url: swiftUIFontExtensionURL)
     }
 
-    private func makeLabelStyleExtensionFileContents(textStyles: [TextStyle], labelStyleExtensionURL: URL) throws -> FileContents {
+    private func makeTextStyleExtensionFileContents(textStyles: [TextStyle], textStyleExtensionURL: URL) throws -> FileContents {
         let dict = textStyles.map { style -> [String: Any] in
             let type: String = style.fontStyle?.textStyleName ?? ""
+            let textCase: String = {
+                switch style.textCase {
+                case .lowercased:
+                    return "lowercase"
+                case .uppercased:
+                    return "uppercase"
+                case .original:
+                    return "original"
+                }
+            }()
             return [
                 "className": style.name.first!.uppercased() + style.name.dropFirst(),
                 "varName": style.name,
@@ -85,18 +95,19 @@ final public class XcodeTypographyExporter: XcodeExporterBase {
                 "type": type,
                 "tracking": style.letterSpacing.floatingPointFixed,
                 "lineHeight": style.lineHeight ?? 0,
-                "textCase": style.textCase.rawValue
-            ]}
+                "textCase": textCase
+            ]
+        }
         let env = makeEnvironment(templatesPath: output.templatesPath)
-        let contents = try env.renderTemplate(name: "LabelStyle+extension.swift.stencil", context: ["styles": dict])
-        
-        let labelStylesSwiftExtension = try makeFileContents(for: contents, url: labelStyleExtensionURL)
-        return labelStylesSwiftExtension
+        let contents = try env.renderTemplate(name: "TextStyle+extension.swift.stencil", context: ["styles": dict])
+
+        let textStylesSwiftExtension = try makeFileContents(for: contents, url: textStyleExtensionURL)
+        return textStylesSwiftExtension
     }
 
-    private func makeLabelStyle(labelsDirectory: URL) throws -> FileContents {
+    private func makeTextStyle(textStylesDirectory: URL) throws -> FileContents {
         let env = makeEnvironment(templatesPath: output.templatesPath)
-        let labelStyleSwiftContents = try env.renderTemplate(name: "LabelStyle.swift.stencil")
-        return try makeFileContents(for: labelStyleSwiftContents, directory: labelsDirectory, file: URL(string: "LabelStyle.swift")!)
+        let textStyleSwiftContents = try env.renderTemplate(name: "TextStyle.swift.stencil")
+        return try makeFileContents(for: textStyleSwiftContents, directory: textStylesDirectory, file: URL(string: "TextStyle.swift")!)
     }
 }

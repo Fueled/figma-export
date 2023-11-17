@@ -93,10 +93,10 @@ struct Params: Decodable {
 
         struct Typography: Decodable {
             let fontSwift: URL?
-            let labelStyleSwift: URL?
+            let textStyleSwift: URL?
             let swiftUIFontSwift: URL?
-            let generateLabels: Bool
-            let labelsDirectory: URL?
+            let generateTextStyles: Bool
+            let textStylesDirectory: URL?
             let nameStyle: NameStyle
         }
 

@@ -118,14 +118,14 @@ ios:
   typography:
     # [optional] Absolute or relative path to swift file where to export UIKit fonts (UIFont extension).
     fontSwift: "./Source/UIComponents/UIFont+extension.swift"
-    # [optional] Absolute or relative path to swift file where to generate LabelStyle extensions for each style (LabelStyle extension).
-    labelStyleSwift: "./Source/UIComponents/LabelStyle+extension.swift"
+    # [optional] Absolute or relative path to swift file where to generate TextStyle extensions for each style (TextStyle extension).
+    textStyleSwift: "./Source/UIComponents/TextStyle+extension.swift"
     # [optional] Absolute or relative path to swift file where to export SwiftUI fonts (Font extension).
     swiftUIFontSwift: "./Source/View/Common/Font+extension.swift"
-    # Should FigmaExport generate UILabel for each text style (font)? E.g. HeaderLabel, BodyLabel, CaptionLabel
-    generateLabels: true
-    # Relative or absolute path to directory where to place UILabel for each text style (font) (Requred if generateLabels = true)
-    labelsDirectory: "./Source/UIComponents/"
+    # Should FigmaExport generate TextStyles for each text style (font)? E.g. Header, Body, Caption
+    generateTextStyles: true
+    # Relative or absolute path to directory where to place TextStyles for each text style (font) (Required if generateTextStyles = true)
+    textStylesDirectory: "./Source/UIComponents/"
     # Typography name style: camelCase or snake_case
     nameStyle: camelCase
 """#

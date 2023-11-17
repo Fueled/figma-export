@@ -2,7 +2,7 @@ import Foundation
 
 public struct XcodeTypographyOutput {
     let urls: URLs
-    let generateLabels: Bool
+    let generateTextStyles: Bool
     let addObjcAttribute: Bool
     let templatesPath: URL?
     
@@ -18,40 +18,40 @@ public struct XcodeTypographyOutput {
         }
     }
     
-    public struct LabelURLs {
-        let labelsDirectory: URL?
-        let labelStyleExtensionsURL: URL?
-        
+    public struct TextStyleURLs {
+        let textStylesDirectory: URL?
+        let textStyleExtensionsURL: URL?
+
         public init(
-            labelsDirectory: URL? = nil,
-            labelStyleExtensionsURL: URL? = nil
+            textStylesDirectory: URL? = nil,
+            textStyleExtensionsURL: URL? = nil
         ) {
-            self.labelsDirectory = labelsDirectory
-            self.labelStyleExtensionsURL = labelStyleExtensionsURL
+            self.textStylesDirectory = textStylesDirectory
+            self.textStyleExtensionsURL = textStyleExtensionsURL
         }
     }
     
     public struct URLs {
         public let fonts: FontURLs
-        public let labels: LabelURLs
-        
+        public let textStyles: TextStyleURLs
+
         public init(
             fonts: FontURLs,
-            labels: LabelURLs
+            textStyles: TextStyleURLs
         ) {
             self.fonts = fonts
-            self.labels = labels
+            self.textStyles = textStyles
         }
     }
 
     public init(
         urls: URLs,
-        generateLabels: Bool? = false,
+        generateTextStyles: Bool? = false,
         addObjcAttribute: Bool? = false,
         templatesPath: URL? = nil
     ) {
         self.urls = urls
-        self.generateLabels = generateLabels ?? false
+        self.generateTextStyles = generateTextStyles ?? false
         self.addObjcAttribute = addObjcAttribute ?? false
         self.templatesPath = templatesPath
     }
