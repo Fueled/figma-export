@@ -204,13 +204,15 @@ If name of an image contains idiom at the end (e.g. ~ipad), it will be exported 
 #### Typography
 
 When your execute `figma-export typography` command `figma-export` generates 3 files:
-1. `UIFont+extension.swift` extension for UIFont that declares your custom fonts. Use these fonts like this `UIFont.header()`, `UIFont.caption1()`.
-2. `LabelStyle.swift` struct for generating attributes for NSAttributesString with custom lineHeight and tracking (letter spacing).
-3. `Label.swift` file that contains base Label class and class for each text style. E.g. HeaderLabel, BodyLabel, Caption1Label. Specify these classes in xib files on in code.
+1. `TextStyle.swift` struct for generating TextStyles for SwiftUI with custom line spacing, kerning (letter spacing) and text case.
+2. `TextStyle+extension.swift` extension including all the custom TextStyles from the Figma file.
+3. `Font+extension` extension for Font that declares your custom fonts.
+4. `UIFont+extension.swift` extension for UIFont that declares your custom fonts. Mainly used to get the default font lineHeight.
 
 Example of these files:
-- [./Examples/Example/UIComponents/Source/Typography/Label.swift](./Examples/Example/UIComponents/Source/Typography/Label.swift)
-- [./Examples/Example/UIComponents/Source/Typography/LabelStyle.swift](./Examples/Example/UIComponents/Source/Typography/LabelStyle.swift)
+- [./Examples/Example/UIComponents/Source/Typography/TextStyle.swift](./Examples/Example/UIComponents/Source/Typography/TextStyle.swift)
+- [./Examples/Example/UIComponents/Source/Typography/TextStyle+extension.swift](./Examples/Example/UIComponents/Source/Typography/TextStyle+extension.swift)
+- [./Examples/Example/UIComponents/Source/Typography/Font+extension.swift](./Examples/Example/UIComponents/Source/Typography/Font+extension.swift)
 - [./Examples/Example/UIComponents/Source/Typography/UIFont+extension.swift](./Examples/Example/UIComponents/Source/Typography/UIFont+extension.swift)
 
 ### Android
@@ -430,11 +432,10 @@ Custom Stencil templates for colors and images must have the following names:
 - Image+extension.swift.stencil for SwiftUI images
 
 Custom Stencil templates for typography must have the following names:
-- Label.swift.stencil,
-- LabelStyle.swift.stencil,
-- LabelStyle+extension.swift.stencil,
+- TextStyle.swift.stencil,
+- TextStyle+extension.swift.stencil,
+- Font+extension.swift.stencil
 - UIFont+extension.swift.stencil
-- Font+extension.swift.stencil.stencil
 
 ##### Android
 
@@ -453,7 +454,7 @@ Custom Stencil templates must have the following names:
 #### iOS
 1. Add a custom font to the Xcode project. Drag & drop font file to the Xcode project, set target membership, and add font file name in the Info.plist file. [See developer documentation for more info.](https://developer.apple.com/documentation/uikit/text_display_and_fonts/adding_a_custom_font_to_your_app)<br><img src="images/fonts.png" width="400" />
 2. Run `figma-export typography` to export text styles
-3. Use generated fonts and labels in your code. E.g. `button.titleLabel?.font = UIFont.body()`, `let label = HeaderLabel()`.
+3. Use generated fonts and text styles in your code. E.g. `Text("Header").textStyle(.header)`.
 
 #### Android
 1. Place font file under the `res` directory of your module

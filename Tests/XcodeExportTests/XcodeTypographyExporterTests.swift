@@ -26,10 +26,10 @@ final class XcodeTypographyExporterTests: XCTestCase {
         let fontUrls = XcodeTypographyOutput.FontURLs(
             fontExtensionURL: URL(string: "~/UIFont+extension.swift")!
         )
-        let labelUrls = XcodeTypographyOutput.LabelURLs()
+        let styleUrls = XcodeTypographyOutput.StyleURLs()
         let urls = XcodeTypographyOutput.URLs(
             fonts: fontUrls,
-            labels: labelUrls
+            styles: styleUrls
         )
         let output = XcodeTypographyOutput(urls: urls)
         let exporter = XcodeTypographyExporter(output: output)
@@ -110,10 +110,10 @@ final class XcodeTypographyExporterTests: XCTestCase {
         let fontUrls = XcodeTypographyOutput.FontURLs(
             fontExtensionURL: URL(string: "~/UIFont+extension.swift")!
         )
-        let labelUrls = XcodeTypographyOutput.LabelURLs()
+        let styleUrls = XcodeTypographyOutput.StyleURLs()
         let urls = XcodeTypographyOutput.URLs(
             fonts: fontUrls,
-            labels: labelUrls
+            styles: styleUrls
         )
         let output = XcodeTypographyOutput(
             urls: urls,
@@ -197,10 +197,10 @@ final class XcodeTypographyExporterTests: XCTestCase {
         let fontUrls = XcodeTypographyOutput.FontURLs(
             swiftUIFontExtensionURL: URL(string: "~/Font+extension.swift")!
         )
-        let labelUrls = XcodeTypographyOutput.LabelURLs()
+        let styleUrls = XcodeTypographyOutput.StyleURLs()
         let urls = XcodeTypographyOutput.URLs(
             fonts: fontUrls,
-            labels: labelUrls
+            styles: styleUrls
         )
         let output = XcodeTypographyOutput(urls: urls)
         let exporter = XcodeTypographyExporter(output: output)
@@ -269,17 +269,17 @@ final class XcodeTypographyExporterTests: XCTestCase {
     
     func testExportStyleExtensions() throws {
         let fontUrls = XcodeTypographyOutput.FontURLs()
-        let labelUrls = XcodeTypographyOutput.LabelURLs(
-            labelsDirectory: URL(string: "~/")!,
-            labelStyleExtensionsURL: URL(string: "~/LabelStyle+extension.swift")!
+        let styleUrls = XcodeTypographyOutput.StyleURLs(
+            directory: URL(string: "~/")!,
+            extensionsURL: URL(string: "~/TextStyle+extension.swift")!
         )
         let urls = XcodeTypographyOutput.URLs(
             fonts: fontUrls,
-            labels: labelUrls
+            styles: styleUrls
         )
         let output = XcodeTypographyOutput(
             urls: urls,
-            generateLabels: true
+            generateStyles: true
         )
         let exporter = XcodeTypographyExporter(output: output)
         
@@ -521,19 +521,7 @@ final class XcodeTypographyExporterTests: XCTestCase {
         """
                 
         XCTAssertEqual(files.count, 3, "Must be generated 3 files but generated \(files.count)")
-        
-        // Label.swift
-        XCTAssertNoDifference(
-            files[0],
-            FileContents(
-                destination: Destination(
-                    directory: URL(string: "~/")!,
-                    file: URL(string: "Label.swift")!
-                ),
-                data: contentsLabel.data(using: .utf8)!
-            )
-        )
-        
+                
         // LabelStyle.swift
         XCTAssertNoDifference(
             files[1],
@@ -561,16 +549,16 @@ final class XcodeTypographyExporterTests: XCTestCase {
     
     func testExportLabel() throws {
         let fontUrls = XcodeTypographyOutput.FontURLs()
-        let labelUrls = XcodeTypographyOutput.LabelURLs(
-            labelsDirectory: URL(string: "~/")!
+        let styleUrls = XcodeTypographyOutput.StyleURLs(
+            directory: URL(string: "~/")!
         )
         let urls = XcodeTypographyOutput.URLs(
             fonts: fontUrls,
-            labels: labelUrls
+            styles: styleUrls
         )
         let output = XcodeTypographyOutput(
             urls: urls,
-            generateLabels: true
+            generateStyles: true
         )
         let exporter = XcodeTypographyExporter(output: output)
         
@@ -782,18 +770,7 @@ final class XcodeTypographyExporterTests: XCTestCase {
         """
         
         XCTAssertEqual(files.count, 2, "Must be generated 2 files but generated \(files.count)")
-        
-        XCTAssertNoDifference(
-            files[0],
-            FileContents(
-                destination: Destination(
-                    directory: URL(string: "~/")!,
-                    file: URL(string: "Label.swift")!
-                ),
-                data: contentsLabel.data(using: .utf8)!
-            )
-        )
-        
+                
         XCTAssertNoDifference(
             files[1],
             FileContents(

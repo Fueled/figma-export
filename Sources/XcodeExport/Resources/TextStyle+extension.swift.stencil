@@ -1,0 +1,21 @@
+{% include "header.stencil" %}
+import SwiftUI
+
+extension TextStyle {{ '{' }}{% for style in styles %}
+    public static let {{ style.varName }} = TextStyle(
+        font: .{{ style.varName }}{% if style.lineHeight != 0 %},
+        lineSpacing: UIFont.{{ style.varName }}.lineSpacing(lineHeight: {{ style.lineHeight }}){% endif %}{% if style.tracking != 0 %},
+        kerning: {{ style.tracking }}{% endif %}{% if style.textCase != "original" %},
+        textCase: .{{ style.textCase }}{% endif %}
+    ){% endfor %}
+}
+
+#Preview {
+    DesignSystem.initialize()
+    return ScrollView {
+        VStack {{ '{' }}{% for style in styles %}
+            Text("{{ style.className }}")
+                .textStyle(.{{ style.varName }}){% endfor %}
+        }
+    }
+}

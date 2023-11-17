@@ -37,7 +37,8 @@ extension FigmaExportCommand {
                     nameStyle: typographyParams.nameStyle
                 )
                 let processedTextStyles = try processor.process(assets: textStyles).get()
-                logger.info("Saving text styles...")
+                let fontSystemString = typographyParams.fontSystem.map { " for \($0.rawValue)"} ?? ""
+                logger.info("Saving text styles\(fontSystemString)...")
                 try exportXcodeTextStyles(textStyles: processedTextStyles, iosParams: ios)
                 logger.info("Done!")
             }
@@ -62,17 +63,18 @@ extension FigmaExportCommand {
                 fontExtensionURL: iosParams.typography?.fontSwift,
                 swiftUIFontExtensionURL: iosParams.typography?.swiftUIFontSwift
             )
-            let labelUrls = XcodeTypographyOutput.LabelURLs(
-                labelsDirectory: iosParams.typography?.labelsDirectory,
-                labelStyleExtensionsURL: iosParams.typography?.labelStyleSwift
+            let styleUrls = XcodeTypographyOutput.StyleURLs(
+                directory: iosParams.typography?.stylesDirectory,
+                extensionsURL: iosParams.typography?.textStyleSwift
             )
             let urls = XcodeTypographyOutput.URLs(
                 fonts: fontUrls,
-                labels: labelUrls
+                styles: styleUrls
             )
             return XcodeTypographyOutput(
+                fontSystem: iosParams.typography?.fontSystem,
                 urls: urls,
-                generateLabels: iosParams.typography?.generateLabels,
+                generateStyles: iosParams.typography?.generateStyles,
                 addObjcAttribute: iosParams.addObjcAttribute,
                 templatesPath: iosParams.templatesPath
             )

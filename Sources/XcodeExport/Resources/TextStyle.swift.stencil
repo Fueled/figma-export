@@ -1,0 +1,32 @@
+{% include "header.stencil" %}
+import SwiftUI
+
+public struct TextStyle {
+    fileprivate let font: Font
+    fileprivate let lineSpacing: CGFloat
+    fileprivate let kerning: CGFloat
+    fileprivate let textCase: Text.Case?
+
+    internal init(
+        font: Font,
+        lineSpacing: CGFloat = .zero,
+        kerning: CGFloat = .zero,
+        textCase: Text.Case? = nil
+    ) {
+        self.font = font
+        self.lineSpacing = lineSpacing
+        self.kerning = kerning
+        self.textCase = textCase
+    }
+}
+
+extension View {
+    public func textStyle(_ textStyle: TextStyle) -> some View {
+        self
+            .font(textStyle.font)
+            .kerning(textStyle.kerning)
+            .lineSpacing(textStyle.lineSpacing)
+            .textCase(textStyle.textCase)
+            .padding(.vertical, textStyle.lineSpacing / 2)
+    }
+}
