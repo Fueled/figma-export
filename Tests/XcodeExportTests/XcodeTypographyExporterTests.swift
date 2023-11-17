@@ -521,19 +521,7 @@ final class XcodeTypographyExporterTests: XCTestCase {
         """
                 
         XCTAssertEqual(files.count, 3, "Must be generated 3 files but generated \(files.count)")
-        
-        // Label.swift
-        XCTAssertNoDifference(
-            files[0],
-            FileContents(
-                destination: Destination(
-                    directory: URL(string: "~/")!,
-                    file: URL(string: "Label.swift")!
-                ),
-                data: contentsLabel.data(using: .utf8)!
-            )
-        )
-        
+                
         // LabelStyle.swift
         XCTAssertNoDifference(
             files[1],
@@ -782,18 +770,7 @@ final class XcodeTypographyExporterTests: XCTestCase {
         """
         
         XCTAssertEqual(files.count, 2, "Must be generated 2 files but generated \(files.count)")
-        
-        XCTAssertNoDifference(
-            files[0],
-            FileContents(
-                destination: Destination(
-                    directory: URL(string: "~/")!,
-                    file: URL(string: "Label.swift")!
-                ),
-                data: contentsLabel.data(using: .utf8)!
-            )
-        )
-        
+                
         XCTAssertNoDifference(
             files[1],
             FileContents(
