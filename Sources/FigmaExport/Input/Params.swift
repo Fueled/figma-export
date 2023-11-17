@@ -1,5 +1,6 @@
 import Foundation
 import FigmaExportCore
+import XcodeExport
 
 extension NameStyle: Decodable {}
 
@@ -92,11 +93,13 @@ struct Params: Decodable {
         }
 
         struct Typography: Decodable {
+			let fontSystem: FontSystem?
             let fontSwift: URL?
             let textStyleSwift: URL?
+			let labelStyleSwift: URL?
             let swiftUIFontSwift: URL?
-            let generateTextStyles: Bool
-            let textStylesDirectory: URL?
+            let generateStyles: Bool
+            let stylesDirectory: URL?
             let nameStyle: NameStyle
         }
 

@@ -3,6 +3,20 @@ import FigmaExportCore
 import Stencil
 
 final public class XcodeTypographyExporter: XcodeExporterBase {
+    private enum Error: LocalizedError {
+        case missingFont
+        case missingUIFont
+
+        var errorDescription: String? {
+            switch self {
+            case .missingFont:
+                return "swiftUIFontExtensionURL required when using SwiftUI fontSystem"
+            case .missingUIFont:
+                return "fontExtensionURL required when using UIKit or SwiftUI fontSystem"
+            }
+        }
+    }
+
     private let output: XcodeTypographyOutput
 
     public init(output: XcodeTypographyOutput) {
@@ -12,24 +26,27 @@ final public class XcodeTypographyExporter: XcodeExporterBase {
     public func export(textStyles: [TextStyle]) throws -> [FileContents] {
         var files: [FileContents] = []
 
-        // UIKit UIFont extension
-        if let url = output.urls.fonts.fontExtensionURL {
-            files.append(try makeUIFontExtension(textStyles: textStyles, fontExtensionURL: url))
+        // UIKit & SwiftUI UIFont extension
+        guard let url = output.urls.fonts.fontExtensionURL else {
+            throw Error.missingUIFont
         }
+        files.append(try makeUIFontExtension(textStyles: textStyles, fontExtensionURL: url))
 
         // SwiftUI Font extension
-        if let url = output.urls.fonts.swiftUIFontExtensionURL {
+        if output.fontSystem == .swiftUI {
+            guard let url = output.urls.fonts.swiftUIFontExtensionURL else {
+                throw Error.missingFont
+            }
             files.append(try makeFontExtension(textStyles: textStyles, swiftUIFontExtensionURL: url))
         }
 
-        // SwiftUI TextStyles
-        if output.generateTextStyles, let textStylesDirectory = output.urls.textStyles.textStylesDirectory  {
-            // TextStyle.swift
-            files.append(try makeTextStyle(textStylesDirectory: textStylesDirectory))
+        // Styles
+        if output.generateStyles, let stylesDirectory = output.urls.styles.directory  {
+            files.append(try makeStyle(fontSystem: output.fontSystem, directory: stylesDirectory))
 
-            // TextStyle extensions
-            if let url = output.urls.textStyles.textStyleExtensionsURL {
-                files.append(try makeTextStyleExtensionFileContents(
+            if let url = output.urls.styles.extensionsURL {
+                files.append(try makeStyleExtensionFileContents(
+                    fontSystem: output.fontSystem,
                     textStyles: textStyles,
                     textStyleExtensionURL: url
                 ))
@@ -74,17 +91,22 @@ final public class XcodeTypographyExporter: XcodeExporterBase {
         return try makeFileContents(for: contents, url: swiftUIFontExtensionURL)
     }
 
-    private func makeTextStyleExtensionFileContents(textStyles: [TextStyle], textStyleExtensionURL: URL) throws -> FileContents {
+    private func makeStyleExtensionFileContents(fontSystem: FontSystem, textStyles: [TextStyle], textStyleExtensionURL: URL) throws -> FileContents {
         let dict = textStyles.map { style -> [String: Any] in
             let type: String = style.fontStyle?.textStyleName ?? ""
             let textCase: String = {
-                switch style.textCase {
-                case .lowercased:
-                    return "lowercase"
-                case .uppercased:
-                    return "uppercase"
-                case .original:
-                    return "original"
+                switch fontSystem {
+                case .swiftUI:
+                    switch style.textCase {
+                    case .lowercased:
+                        return "lowercase"
+                    case .uppercased:
+                        return "uppercase"
+                    case .original:
+                        return "original"
+                    }
+                case .uiKit:
+                    return style.textCase.rawValue
                 }
             }()
             return [
@@ -99,15 +121,15 @@ final public class XcodeTypographyExporter: XcodeExporterBase {
             ]
         }
         let env = makeEnvironment(templatesPath: output.templatesPath)
-        let contents = try env.renderTemplate(name: "TextStyle+extension.swift.stencil", context: ["styles": dict])
+        let contents = try env.renderTemplate(name: fontSystem.styleExtensionStencilFile, context: ["styles": dict])
 
         let textStylesSwiftExtension = try makeFileContents(for: contents, url: textStyleExtensionURL)
         return textStylesSwiftExtension
     }
 
-    private func makeTextStyle(textStylesDirectory: URL) throws -> FileContents {
+    private func makeStyle(fontSystem: FontSystem, directory: URL) throws -> FileContents {
         let env = makeEnvironment(templatesPath: output.templatesPath)
-        let textStyleSwiftContents = try env.renderTemplate(name: "TextStyle.swift.stencil")
-        return try makeFileContents(for: textStyleSwiftContents, directory: textStylesDirectory, file: URL(string: "TextStyle.swift")!)
+        let textStyleSwiftContents = try env.renderTemplate(name: fontSystem.styleStencilFile)
+        return try makeFileContents(for: textStyleSwiftContents, directory: directory, file: URL(string: fontSystem.styleFile)!)
     }
 }

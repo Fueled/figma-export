@@ -1,8 +1,41 @@
 import Foundation
 
+public enum FontSystem: String, Decodable {
+    case uiKit = "UIKit"
+    case swiftUI = "SwiftUI"
+
+    var styleExtensionStencilFile: String {
+        switch self {
+        case .swiftUI:
+            return "TextStyle+extension.swift.stencil"
+        case .uiKit:
+            return "LabelStyle+extension.swift.stencil"
+        }
+    }
+
+    var styleStencilFile: String {
+        switch self {
+        case .swiftUI:
+            return "TextStyle.swift.stencil"
+        case .uiKit:
+            return "LabelStyle.swift.stencil"
+        }
+    }
+
+    var styleFile: String {
+        switch self {
+        case .swiftUI:
+            return "TextStyle.swift"
+        case .uiKit:
+            return "LabelStyle.swift"
+        }
+    }
+}
+
 public struct XcodeTypographyOutput {
+    let fontSystem: FontSystem
     let urls: URLs
-    let generateTextStyles: Bool
+    let generateStyles: Bool
     let addObjcAttribute: Bool
     let templatesPath: URL?
     
@@ -18,40 +51,42 @@ public struct XcodeTypographyOutput {
         }
     }
     
-    public struct TextStyleURLs {
-        let textStylesDirectory: URL?
-        let textStyleExtensionsURL: URL?
+    public struct StyleURLs {
+        let directory: URL?
+        let extensionsURL: URL?
 
         public init(
-            textStylesDirectory: URL? = nil,
-            textStyleExtensionsURL: URL? = nil
+            directory: URL? = nil,
+            extensionsURL: URL? = nil
         ) {
-            self.textStylesDirectory = textStylesDirectory
-            self.textStyleExtensionsURL = textStyleExtensionsURL
+            self.directory = directory
+            self.extensionsURL = extensionsURL
         }
     }
     
     public struct URLs {
         public let fonts: FontURLs
-        public let textStyles: TextStyleURLs
+        public let styles: StyleURLs
 
         public init(
             fonts: FontURLs,
-            textStyles: TextStyleURLs
+            styles: StyleURLs
         ) {
             self.fonts = fonts
-            self.textStyles = textStyles
+            self.styles = styles
         }
     }
 
     public init(
+        fontSystem: FontSystem? = .swiftUI,
         urls: URLs,
-        generateTextStyles: Bool? = false,
+        generateStyles: Bool? = false,
         addObjcAttribute: Bool? = false,
         templatesPath: URL? = nil
     ) {
+        self.fontSystem = fontSystem ?? .swiftUI
         self.urls = urls
-        self.generateTextStyles = generateTextStyles ?? false
+        self.generateStyles = generateStyles ?? false
         self.addObjcAttribute = addObjcAttribute ?? false
         self.templatesPath = templatesPath
     }

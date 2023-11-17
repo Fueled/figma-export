@@ -26,10 +26,10 @@ final class XcodeTypographyExporterTests: XCTestCase {
         let fontUrls = XcodeTypographyOutput.FontURLs(
             fontExtensionURL: URL(string: "~/UIFont+extension.swift")!
         )
-        let textStyleUrls = XcodeTypographyOutput.TextStyleURLs()
+        let styleUrls = XcodeTypographyOutput.StyleURLs()
         let urls = XcodeTypographyOutput.URLs(
             fonts: fontUrls,
-            textStyles: textStyleUrls
+            styles: styleUrls
         )
         let output = XcodeTypographyOutput(urls: urls)
         let exporter = XcodeTypographyExporter(output: output)
@@ -110,10 +110,10 @@ final class XcodeTypographyExporterTests: XCTestCase {
         let fontUrls = XcodeTypographyOutput.FontURLs(
             fontExtensionURL: URL(string: "~/UIFont+extension.swift")!
         )
-        let textStyleUrls = XcodeTypographyOutput.TextStyleURLs()
+        let styleUrls = XcodeTypographyOutput.StyleURLs()
         let urls = XcodeTypographyOutput.URLs(
             fonts: fontUrls,
-            textStyles: textStyleUrls
+            styles: styleUrls
         )
         let output = XcodeTypographyOutput(
             urls: urls,
@@ -197,10 +197,10 @@ final class XcodeTypographyExporterTests: XCTestCase {
         let fontUrls = XcodeTypographyOutput.FontURLs(
             swiftUIFontExtensionURL: URL(string: "~/Font+extension.swift")!
         )
-        let textStyleUrls = XcodeTypographyOutput.TextStyleURLs()
+        let styleUrls = XcodeTypographyOutput.StyleURLs()
         let urls = XcodeTypographyOutput.URLs(
             fonts: fontUrls,
-            textStyles: textStyleUrls
+            styles: styleUrls
         )
         let output = XcodeTypographyOutput(urls: urls)
         let exporter = XcodeTypographyExporter(output: output)
@@ -269,17 +269,17 @@ final class XcodeTypographyExporterTests: XCTestCase {
     
     func testExportStyleExtensions() throws {
         let fontUrls = XcodeTypographyOutput.FontURLs()
-        let textStyleUrls = XcodeTypographyOutput.TextStyleURLs(
-            textStylesDirectory: URL(string: "~/")!,
-            textStyleExtensionsURL: URL(string: "~/TextStyle+extension.swift")!
+        let styleUrls = XcodeTypographyOutput.StyleURLs(
+            directory: URL(string: "~/")!,
+            extensionsURL: URL(string: "~/TextStyle+extension.swift")!
         )
         let urls = XcodeTypographyOutput.URLs(
             fonts: fontUrls,
-            textStyles: textStyleUrls
+            styles: styleUrls
         )
         let output = XcodeTypographyOutput(
             urls: urls,
-            generateTextStyles: true
+            generateStyles: true
         )
         let exporter = XcodeTypographyExporter(output: output)
         
@@ -549,16 +549,16 @@ final class XcodeTypographyExporterTests: XCTestCase {
     
     func testExportLabel() throws {
         let fontUrls = XcodeTypographyOutput.FontURLs()
-        let textStyleUrls = XcodeTypographyOutput.TextStyleURLs(
-            textStylesDirectory: URL(string: "~/")!
+        let styleUrls = XcodeTypographyOutput.StyleURLs(
+            directory: URL(string: "~/")!
         )
         let urls = XcodeTypographyOutput.URLs(
             fonts: fontUrls,
-            textStyles: textStyleUrls
+            styles: styleUrls
         )
         let output = XcodeTypographyOutput(
             urls: urls,
-            generateTextStyles: true
+            generateStyles: true
         )
         let exporter = XcodeTypographyExporter(output: output)
         
