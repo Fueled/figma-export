@@ -1,0 +1,46 @@
+import 'helpers.rb'
+
+fastlane_version '2.206.0'
+opt_out_usage
+
+platform :mac do
+  lane :release do
+    asset_path = File.join(Dir.pwd, "figma-export.zip")
+    Dir.chdir("..") do
+      sh("swift build -c release --arch arm64 --arch x86_64")
+      sh("cp ./.build/apple/Products/Release/figma-export ./Release/figma-export")
+      sh("cp -r ./.build/apple/Products/Release/figma-export_AndroidExport.bundle ./Release/figma-export_AndroidExport.bundle")
+      sh("cp -r ./.build/apple/Products/Release/figma-export_XcodeExport.bundle ./Release/figma-export_XcodeExport.bundle")
+      sh("zip -r #{asset_path} Release LICENSE")
+    end
+
+    current_short_version = short_version_from_tag()
+    puts "current_short_version: #{current_short_version}"
+
+    new_short_version = bump_semver(semver: current_short_version, bump_type: ENV["VERSION_BUMP_TYPE"])
+    puts "new_short_version: #{new_short_version}"
+
+    tag_name = "v#{new_short_version}"
+    UI.message("Tagging #{tag_name}...")
+
+    if is_ci
+      use_git_credential_store
+      sh("git tag -f \"#{tag_name}\" && git push origin \"refs/tags/#{tag_name}\" --force")
+      
+      last_commit_message = sh("git log -1 --pretty=%B").strip
+
+      set_github_release(
+        repository_name: ENV["REPOSITORY_NAME"],
+        api_bearer: ENV["GIT_TOKEN"],
+        name: tag_name,
+        tag_name: tag_name,
+        description: last_commit_message,
+        upload_assets: [
+          asset_path
+        ]
+      )
+    else
+      UI.message("Skipping tagging and github release because this is not a CI build")
+    end
+  end
+end
