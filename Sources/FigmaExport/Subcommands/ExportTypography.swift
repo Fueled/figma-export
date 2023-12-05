@@ -63,18 +63,25 @@ extension FigmaExportCommand {
                 fontExtensionURL: iosParams.typography?.fontSwift,
                 swiftUIFontExtensionURL: iosParams.typography?.swiftUIFontSwift
             )
-            let styleUrls = XcodeTypographyOutput.StyleURLs(
-                directory: iosParams.typography?.stylesDirectory,
-                extensionsURL: iosParams.typography?.textStyleSwift
+            let labelUrls = XcodeTypographyOutput.LabelURLs(
+                labelsDirectory: iosParams.typography?.labelsDirectory,
+                labelStyleExtensionsURL: iosParams.typography?.labelStyleSwift
+            )
+
+            let textstyleUrls = XcodeTypographyOutput.TextStyleURLs(
+                textStyleDirectory: iosParams.typography?.textStylesDirectory,
+                textStyleExtensionsURL: iosParams.typography?.textStyleSwift
             )
             let urls = XcodeTypographyOutput.URLs(
                 fonts: fontUrls,
-                styles: styleUrls
+                labels: labelUrls,
+                textStyles: textstyleUrls
             )
             return XcodeTypographyOutput(
                 fontSystem: iosParams.typography?.fontSystem,
                 urls: urls,
-                generateStyles: iosParams.typography?.generateStyles,
+                generateLabels: iosParams.typography?.generateLabels,
+                generateTextStyles: iosParams.typography?.generateTextStyles,
                 addObjcAttribute: iosParams.addObjcAttribute,
                 templatesPath: iosParams.templatesPath
             )

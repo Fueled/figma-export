@@ -203,11 +203,13 @@ If name of an image contains idiom at the end (e.g. ~ipad), it will be exported 
 
 #### Typography
 
-When your execute `figma-export typography` command `figma-export` generates 3 files:
-1. `TextStyle.swift` struct for generating TextStyles for SwiftUI with custom line spacing, kerning (letter spacing) and text case.
-2. `TextStyle+extension.swift` extension including all the custom TextStyles from the Figma file.
-3. `Font+extension` extension for Font that declares your custom fonts.
-4. `UIFont+extension.swift` extension for UIFont that declares your custom fonts. Mainly used to get the default font lineHeight.
+When your execute `figma-export typography` command `figma-export` generates 6 files:
+1. `UIFont+extension.swift` extension for UIFont that declares your custom fonts. Mainly used to get the default font lineHeight.
+2. `Font+extension` extension for Font that declares your custom fonts.
+3. `TextStyle.swift` struct for generating TextStyles for SwiftUI with custom line spacing, kerning (letter spacing) and text case.
+4. `TextStyle+extension.swift` extension including all the custom TextStyles from the Figma file.
+5. `LabelStyle.swift` struct for generating attributes for NSAttributesString with custom lineHeight and tracking (letter spacing).
+6. `Label.swift` file that contains base Label class and class for each text style. E.g. HeaderLabel, BodyLabel, Caption1Label. Specify these classes in xib files on in code.
 
 Example of these files:
 - [./Examples/Example/UIComponents/Source/Typography/TextStyle.swift](./Examples/Example/UIComponents/Source/Typography/TextStyle.swift)

@@ -35,7 +35,8 @@ public enum FontSystem: String, Decodable {
 public struct XcodeTypographyOutput {
     let fontSystem: FontSystem
     let urls: URLs
-    let generateStyles: Bool
+    let generateLabels: Bool
+    let generateTextStyles: Bool
     let addObjcAttribute: Bool
     let templatesPath: URL?
     
@@ -50,43 +51,61 @@ public struct XcodeTypographyOutput {
             self.fontExtensionURL = fontExtensionURL
         }
     }
-    
-    public struct StyleURLs {
-        let directory: URL?
-        let extensionsURL: URL?
+
+    public struct LabelURLs {
+        let labelsDirectory: URL?
+        let labelStyleExtensionsURL: URL?
 
         public init(
-            directory: URL? = nil,
-            extensionsURL: URL? = nil
+            labelsDirectory: URL? = nil,
+            labelStyleExtensionsURL: URL? = nil
         ) {
-            self.directory = directory
-            self.extensionsURL = extensionsURL
+            self.labelsDirectory = labelsDirectory
+            self.labelStyleExtensionsURL = labelStyleExtensionsURL
         }
     }
-    
+
+    public struct TextStyleURLs {
+        let textStyleDirectory: URL?
+        let textStyleExtensionsURL: URL?
+
+        public init(
+            textStyleDirectory: URL? = nil,
+            textStyleExtensionsURL: URL? = nil
+        ) {
+            self.textStyleDirectory = textStyleDirectory
+            self.textStyleExtensionsURL = textStyleExtensionsURL
+        }
+    }
+
     public struct URLs {
         public let fonts: FontURLs
-        public let styles: StyleURLs
+        public let labels: LabelURLs
+        public let textStyles: TextStyleURLs
 
         public init(
             fonts: FontURLs,
-            styles: StyleURLs
+            labels: LabelURLs,
+            textStyles: TextStyleURLs
         ) {
             self.fonts = fonts
-            self.styles = styles
+            self.labels = labels
+            self.textStyles = textStyles
         }
     }
 
     public init(
         fontSystem: FontSystem? = .swiftUI,
         urls: URLs,
-        generateStyles: Bool? = false,
+        generateLabels: Bool? = false,
+        generateTextStyles: Bool? = false,
         addObjcAttribute: Bool? = false,
         templatesPath: URL? = nil
     ) {
         self.fontSystem = fontSystem ?? .swiftUI
         self.urls = urls
-        self.generateStyles = generateStyles ?? false
+        self.generateLabels = generateLabels ?? false
+        self.generateTextStyles = generateTextStyles ?? false
         self.addObjcAttribute = addObjcAttribute ?? false
         self.templatesPath = templatesPath
     }
